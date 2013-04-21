@@ -1,0 +1,14 @@
+﻿<header>
+  
+</header>
+<div id="body">
+      <h2>Sign in or create a new account:</h2>
+        @using (Html.BeginForm("Login", "Home",  FormMethod.Post, new { @class = "form-signin" }))
+        {
+                <div>
+                    @Html.TextBox("username", "", "", new { placeholder = "Username" })<br />
+                    @Html.Password("password")
+                </div>
+                <input type="submit" value="lets go" />
+        }
+</div>
