@@ -18,12 +18,11 @@ namespace Laurus.Secrets.Controllers
 
         public ActionResult Index()
         {
-            var password = HttpContext.Request.Cookies["password"].Value;
             var userId = Int32.Parse(HttpContext.Request.Cookies["userId"].Value);
 
             var passwords = db.Passwords.Where(p => p.UserId == userId).Include(p => p.User);
-            foreach (var p in passwords)
-                p.EncryptedData = new Encrypter().Decrypt(p.EncryptedData, password);
+            //foreach (var p in passwords)
+            //    p.EncryptedData = new Encrypter().Decrypt(p.EncryptedData, password);
             return View(passwords.ToList());
         }
 
@@ -57,7 +56,13 @@ namespace Laurus.Secrets.Controllers
         {
             if (ModelState.IsValid)
             {
-                password.EncryptedData = new Encrypter().Encrypt(password.EncryptedData, "password");
+                var userId = Int32.Parse(Request.Cookies.Get("userid").Value);
+                password.UserId = userId;
+                //var userPassword = HttpContext.Request.Cookies["password"].Value;
+                //var decrypted = password.EncryptedData;
+                //var e = new Encrypter();
+                //password.EncryptedData = e.Encrypt(decrypted, userPassword);
+                //password.EncryptedData = new Encrypter().Encrypt(password.EncryptedData, "password");
                 db.Passwords.Add(password);
                 db.SaveChanges();
                 return RedirectToAction("Index");

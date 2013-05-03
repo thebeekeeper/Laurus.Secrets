@@ -26,7 +26,7 @@ namespace Laurus.Secrets.Tests
         {
             var u = new User()
             {
-                Email = "test2@test.com"
+                Email = "test3@test.com"
             };
             using (var db = new Database())
             {
@@ -42,7 +42,7 @@ namespace Laurus.Secrets.Tests
             using (var db = new Database())
             {
                 var user = db.Users.Single(x => x.UserId == u.UserId);
-                user.Passwords.Add(new Password() { EncryptedData = encryptedData, Salt = "adsf" });
+                user.Passwords.Add(new Password() { EncryptedData = encryptedData });
                 db.SaveChanges();
             }
         }
@@ -51,9 +51,9 @@ namespace Laurus.Secrets.Tests
         public void CreateUser()
         {
             var e = new Encrypter();
-            var u = new User() { Email = "test2@test.com" };
+            var u = new User() { Email = "test3@test.com" };
             var password = "blarf";
-            u.MasterPassword = e.HashPassword(password);
+            //u.MasterPassword = e.HashPassword(password);
 
             using (var db = new Database())
             {
@@ -70,6 +70,16 @@ namespace Laurus.Secrets.Tests
             var encrypted1 = e.HashPassword(pass);
             var encrypted2 = e.HashPassword(pass);
             Assert.AreEqual(encrypted1, encrypted2);
+        }
+
+        [TestMethod]
+        public void ReadDataTemp()
+        {
+            var db = new Database();
+            var pw = db.Passwords.Where(p => p.PasswordId == 10).First();
+            var mp = db.Users.Where(u => u.UserId == 7).First();
+            Console.WriteLine(pw.EncryptedData);
+            //Console.WriteLine(mp.MasterPassword);
         }
     }
 }

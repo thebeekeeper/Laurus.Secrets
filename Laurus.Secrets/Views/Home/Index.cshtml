@@ -1,14 +1,58 @@
 ﻿<header>
-  
 </header>
 <div id="body">
-      <h2>Sign in or create a new account:</h2>
-        @using (Html.BeginForm("Login", "Home",  FormMethod.Post, new { @class = "form-signin" }))
-        {
-                <div>
-                    @Html.TextBox("username", "", "", new { placeholder = "Username" })<br />
-                    @Html.Password("password")
-                </div>
-                <input type="submit" value="lets go" />
-        }
+    <h2>Sign in or create a new account:</h2>
+    @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-signin" }))
+    {
+        <div>
+            @Html.TextBox("username", "", "", new { placeholder = "Username" })<br />
+            @Html.Password("password")
+        </div>
+        <a href="#" id="submit-button">log in</a>
+        <div>or</div>
+        <a href="#" id="register-button">register</a>
+    }
 </div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="~/Scripts/md5-min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#submit-button").click(function () {
+                var username = $("#username").val();
+                var pass_hash = hex_md5($("#password").val());
+
+                $.post("/Home/Login",
+                    {
+                        Username: username,
+                        PasswordHash: pass_hash,
+                    },
+                    function (data, status) {
+                        if (data == -1) {
+                            alert("error logging in");
+                        } else {
+                            // store password in local storage to decrypt data
+                            localStorage.setItem("key", $("#password"));
+                            window.location = "/Secret";
+                        }
+                    });
+            });
+            $("#register-button").click(function () {
+                var username = $("#username").val();
+                var pass_hash = hex_md5($("#password").val());
+
+                $.post("/Home/Register",
+                    {
+                        Username: username,
+                        PasswordHash: pass_hash,
+                    },
+                    function (data, status) {
+                        localStorage.setItem("key", $("#password"));
+                        window.location = "/Secret";
+                    });
+
+            });
+        });
+    </script>
+}

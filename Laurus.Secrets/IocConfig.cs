@@ -3,6 +3,7 @@ using Ninject.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
@@ -14,6 +15,7 @@ namespace Laurus.Secrets
         public static void RegisterIoc(HttpConfiguration config)
         {
             var kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
             kernel.Bind<RepositoryFactories>().To<RepositoryFactories>().InSingletonScope();
             kernel.Bind<IRepositoryProvider>().To<RepositoryProvider>();
             kernel.Bind<IUow>().To<Uow>();

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Ninject;
+using Ninject.Web.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -12,15 +15,21 @@ namespace Laurus.Secrets
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication
+    //public class WebApiApplication : System.Web.HttpApplication
+    public class WebApiApplication : NinjectHttpApplication
     {
-        protected void Application_Start()
+        protected override IKernel CreateKernel()
         {
-            AreaRegistration.RegisterAllAreas();
-
+            var kernel = new StandardKernel();
             IocConfig.RegisterIoc(GlobalConfiguration.Configuration);
+            return kernel;
+        }
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
+
+        protected override void OnApplicationStarted()
+        {
+            base.OnApplicationStarted();
+            AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

@@ -10,9 +10,7 @@ namespace Laurus.Secrets.Models
     {
         public int PasswordId { get; set; }
         public string EncryptedData { get; set; }
-        // TODO: figure out how to exclude a member
-        //public string DecryptedData { get; private set; }
-        public string Salt { get; set; }
+        public string Label { get; set; }
 
         public int UserId { get; set; }
         public virtual User User { get; set; }
