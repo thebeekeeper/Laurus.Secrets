@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Laurus.Secrets.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -13,7 +15,8 @@ namespace Laurus.Secrets.Controllers
 
         public ActionResult Index()
         {
-            return View();
+			var v = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			return View(new AboutModel() { Version = v });
         }
 
     }
