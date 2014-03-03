@@ -10,9 +10,14 @@ namespace Laurus.Secrets.Models
     {
         public int PasswordId { get; set; }
         public string EncryptedData { get; set; }
+		public KeyValuePair<string, string>[] Fields { get; set; }
         public string Label { get; set; }
 
         public int UserId { get; set; }
         public virtual User User { get; set; }
+
+		public Password()
+		{
+		}
     }
 }

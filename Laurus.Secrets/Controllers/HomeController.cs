@@ -24,7 +24,7 @@ namespace Laurus.Secrets.Controllers
                 var d = new Database();
             }
             catch (Exception e)
-            {
+           { 
                 throw new Exception(e.Message);
             }
             using (var db = new Database())
@@ -39,31 +39,42 @@ namespace Laurus.Secrets.Controllers
             return userId;
         }
 
-        public int Register(LoginData login)
+        public JsonResult Register(LoginData login)
         {
+            var result = new RegistrationResult();
+
             try
             {
-
                 int userId = -1;
                 using (var db = new Database())
                 {
-                    var user = new User()
+                    if (db.Users.Any(u => u.Email.Equals(login.Username, StringComparison.OrdinalIgnoreCase)))
                     {
-                        Email = login.Username,
-                        PasswordHash = login.PasswordHash
-                    };
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    userId = user.UserId;
+                        result.Result = false;
+                        result.Message = "Username already taken";
+                        result.UserId = -1;
+                    }
+                    else
+                    {
+                        var user = new User()
+                        {
+                            Email = login.Username,
+                            PasswordHash = login.PasswordHash
+                        };
+                        db.Users.Add(user);
+                        db.SaveChanges();
+                        userId = user.UserId;
+                        result.Result = true;
+                        result.UserId = user.UserId;
+                    }
                 }
                 Response.SetCookie(new HttpCookie("userid", userId.ToString()));
-                return userId;
             }
             catch (Exception e)
             {
                 throw new Exception("register failed");
             }
-
+            return this.Json(result);
         }
         
         //public ActionResult Login(FormCollection collection)

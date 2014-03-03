@@ -1,7 +1,7 @@
 ﻿<header>
 </header>
 <div id="body">
-    <h2>Sign in or create a new account:</h2>
+    <h2>Sign in or create a new account</h2>
     @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class = "form-signin" }))
     {
         <div>
@@ -20,6 +20,8 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#submit-button").click(function () {
+                $("#busy-indicator").show();
+
                 var username = $("#username").val();
                 var pass_hash = hex_md5($("#password").val());
 
@@ -29,6 +31,7 @@
                         PasswordHash: pass_hash,
                     },
                     function (data, status) {
+                        $("#busy-indicator").hide();
                         if (data == -1) {
                             alert("error logging in");
                         } else {
@@ -39,19 +42,32 @@
                     });
             });
             $("#register-button").click(function () {
+                $("#busy-indicator").show();
                 var username = $("#username").val();
                 var pass_hash = hex_md5($("#password").val());
 
-                $.post("/Home/Register",
-                    {
-                        Username: username,
-                        PasswordHash: pass_hash,
-                    },
-                    function (data, status) {
+                //$.post("/Home/Register",
+                //    {
+                //        Username: username,
+                //        PasswordHash: pass_hash,
+                //    },
+                //    function (data, status) {
+                //        $("#busy-indicator").hide();
+                //        alert(data);
+                //        localStorage.setItem("key", $("#password"));
+                //        window.location = "/Secret";
+                //    });
+
+                $.ajax({ type: 'post', url: '/Home/Register', data: { 'Username': username, 'PasswordHash': pass_hash } }).done(function (result) {
+                    $("#busy-indicator").hide();
+                    if (result.Result == true) {
                         localStorage.setItem("key", $("#password"));
                         window.location = "/Secret";
-                    });
-
+                    }
+                    else {
+                        alert(result.Message);
+                    }
+                });
             });
         });
     </script>
