@@ -71,15 +71,5 @@ namespace Laurus.Secrets.Tests
             var encrypted2 = e.HashPassword(pass);
             Assert.AreEqual(encrypted1, encrypted2);
         }
-
-        [TestMethod]
-        public void ReadDataTemp()
-        {
-            var db = new Database();
-            var pw = db.Passwords.Where(p => p.PasswordId == 10).First();
-            var mp = db.Users.Where(u => u.UserId == 7).First();
-            Console.WriteLine(pw.EncryptedData);
-            //Console.WriteLine(mp.MasterPassword);
-        }
     }
 }
