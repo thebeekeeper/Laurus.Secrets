@@ -20,7 +20,9 @@ namespace Laurus.Secrets.Controllers
         {
             var userId = Int32.Parse(HttpContext.Request.Cookies["userId"].Value);
 
-            var passwords = db.Passwords.Where(p => p.UserId == userId).Include(p => p.User);
+			var passwords = db.Passwords
+				.Where(p => p.UserId == userId)
+				.Include(p => p.User);
             return View(passwords.ToList());
         }
 
